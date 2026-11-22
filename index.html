@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Network Status Recovery App</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f5f6; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; width: 320px; }
+        #status-indicator { padding: 15px; border-radius: 8px; font-weight: bold; font-size: 1.2rem; margin-top: 15px; transition: all 0.3s ease; }
+        /* Green card: healthy connection. Red card: the drop the test will force. */
+        .online { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .offline { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>App Connectivity</h2>
+        <p>Current Application State:</p>
+        <!-- Starts healthy. The test must see this text and the "online" class before it cuts the network. -->
+        <div id="status-indicator" class="online">Connected to Network</div>
+    </div>
+    <script>
+        // One element. The browser events below are the whole state machine.
+        const indicator = document.getElementById('status-indicator');
+
+        // Chrome fires "offline" when the network is cut. Flip the card to the red disconnected state.
+        window.addEventListener('offline', () => {
+            indicator.textContent = 'Disconnected / Offline';
+            indicator.className = 'offline';
+        });
+
+        // Chrome fires "online" when the network returns. Restore the original green connected state.
+        window.addEventListener('online', () => {
+            indicator.textContent = 'Connected to Network';
+            indicator.className = 'online';
+        });
+    </script>
+</body>
+</html>
